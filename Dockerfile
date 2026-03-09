@@ -31,6 +31,8 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN npm install -g mcp-remote@latest
+
 COPY --from=builder /build/target/release/openfang /usr/local/bin/openfang
 
 RUN ln -sf /usr/bin/chromium /usr/local/bin/chromium-browser || true
@@ -43,6 +45,7 @@ RUN printf '%s\n' \
     '#!/bin/sh' \
     'set -eu' \
     'mkdir -p /data /data/mcp-auth /workspace' \
+    'if [ -n "${N8N_MCP_AUTH_TOKEN:-}" ] && [ -z "${N8N_MCP_AUTH_HEADER:-}" ]; then export N8N_MCP_AUTH_HEADER="Bearer ${N8N_MCP_AUTH_TOKEN}"; fi' \
     'cat > /data/config.toml <<EOF' \
     'api_listen = "0.0.0.0:50051"' \
     '' \
@@ -67,38 +70,8 @@ RUN printf '%s\n' \
     '' \
     '[mcp_servers.transport]' \
     'type = "stdio"' \
-    'command = "npx"' \
-    'args = ["-y", "mcp-remote@latest", "https://ads-mcp.imperiolabs.com.br/mcp", "--transport", "http-only"]' \
-    '' \
-    '[[mcp_servers]]' \
-    'name = "notion-mcp"' \
-    'timeout_secs = 60' \
-    'env = ["HOME", "MCP_REMOTE_CONFIG_DIR"]' \
-    '' \
-    '[mcp_servers.transport]' \
-    'type = "stdio"' \
-    'command = "npx"' \
-    'args = ["-y", "mcp-remote@latest", "https://mcp.notion.com/mcp", "--transport", "http-first"]' \
-    '' \
-    '[[mcp_servers]]' \
-    'name = "n8n-mcp-vps"' \
-    'timeout_secs = 150' \
-    'env = ["HOME", "MCP_REMOTE_CONFIG_DIR", "N8N_MCP_AUTH_HEADER"]' \
-    '' \
-    '[mcp_servers.transport]' \
-    'type = "stdio"' \
-    'command = "npx"' \
-    'args = ["-y", "mcp-remote@latest", "https://ia-mcp-n8n-1.y7xhql.easypanel.host/mcp", "--header", "Authorization:${N8N_MCP_AUTH_HEADER}", "--transport", "http-only"]' \
-    '' \
-    '[[mcp_servers]]' \
-    'name = "context7"' \
-    'timeout_secs = 60' \
-    'env = ["HOME", "MCP_REMOTE_CONFIG_DIR", "CONTEXT7_API_KEY"]' \
-    '' \
-    '[mcp_servers.transport]' \
-    'type = "stdio"' \
-    'command = "npx"' \
-    'args = ["-y", "mcp-remote@latest", "https://mcp.context7.com/mcp", "--header", "CONTEXT7_API_KEY:${CONTEXT7_API_KEY}", "--transport", "http-only"]' \
+    'command = "mcp-remote"' \
+    'args = ["http://ia_meta-ads-mcp:8080/mcp", "--allow-http", "--transport", "http-only"]' \
     '' \
     '[[mcp_servers]]' \
     'name = "kie-mcp"' \
@@ -107,8 +80,18 @@ RUN printf '%s\n' \
     '' \
     '[mcp_servers.transport]' \
     'type = "stdio"' \
-    'command = "npx"' \
-    'args = ["-y", "mcp-remote@latest", "http://ia_mcp-kie_ia_mcp-kie-ai:8081/mcp", "--allow-http", "--transport", "http-first"]' \
+    'command = "mcp-remote"' \
+    'args = ["http://ia_mcp-kie_ia_mcp-kie-ai:8082/mcp", "--allow-http", "--transport", "http-only"]' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "n8n-mcp-vps"' \
+    'timeout_secs = 150' \
+    'env = ["HOME", "MCP_REMOTE_CONFIG_DIR", "N8N_MCP_AUTH_HEADER"]' \
+    '' \
+    '[mcp_servers.transport]' \
+    'type = "stdio"' \
+    'command = "mcp-remote"' \
+    'args = ["http://ia_mcp-n8n-1_n8n-mcp:3000/mcp", "--allow-http", "--header", "Authorization:${N8N_MCP_AUTH_HEADER:-}", "--transport", "http-only"]' \
     '' \
     '[[mcp_servers]]' \
     'name = "runware-mcp"' \
@@ -117,8 +100,8 @@ RUN printf '%s\n' \
     '' \
     '[mcp_servers.transport]' \
     'type = "stdio"' \
-    'command = "npx"' \
-    'args = ["-y", "mcp-remote@latest", "http://ia_mcp-runware:8081/sse", "--allow-http", "--transport", "sse-only"]' \
+    'command = "mcp-remote"' \
+    'args = ["http://ia_mcp-runware:8081/sse", "--allow-http", "--transport", "sse-only"]' \
     'EOF' \
     'exec openfang start --config /data/config.toml' \
     > /usr/local/bin/start-openfang.sh && \
