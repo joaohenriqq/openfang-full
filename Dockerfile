@@ -49,30 +49,18 @@ RUN printf '%s\n' \
     '' \
     '[[mcp_servers]]' \
     'name = "meta-ads"' \
-    'timeout_secs = 50' \
-    '[mcp_servers.transport]' \
-    'type = "sse"' \
     'url = "http://ia_meta-ads-mcp:8080/mcp"' \
     '' \
     '[[mcp_servers]]' \
     'name = "notion-mcp"' \
-    'timeout_secs = 50' \
-    '[mcp_servers.transport]' \
-    'type = "sse"' \
     'url = "https://mcp.notion.com/mcp"' \
     '' \
     '[[mcp_servers]]' \
     'name = "kie-mcp"' \
-    'timeout_secs = 60' \
-    '[mcp_servers.transport]' \
-    'type = "sse"' \
     'url = "http://ia_mcp-kie_ia_mcp-kie-ai:8081/mcp"' \
     '' \
     '[[mcp_servers]]' \
     'name = "runware-mcp"' \
-    'timeout_secs = 60' \
-    '[mcp_servers.transport]' \
-    'type = "sse"' \
     'url = "http://ia_mcp-runware:8081/sse"' \
     '' \
     '[[mcp_servers]]' \
