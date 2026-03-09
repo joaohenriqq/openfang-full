@@ -102,19 +102,6 @@ RUN printf '%s\n' \
 ENV OPENFANG_HOME=/data
 WORKDIR /app
 
-RUN mkdir -p /data /app /workspace && \
-    python3 --version && \
-    node --version && \
-    npm --version && \
-    chromium --version && \
-    yt-dlp --version && \
-    ffmpeg -version && \
-    sudo --version && \
-    rustc --version && \
-    cargo --version && \
-    openfang --version && \
-    mcporter --version
-
 EXPOSE 50051
 
 CMD ["/usr/local/bin/start-openfang.sh"]
