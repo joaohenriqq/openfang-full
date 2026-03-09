@@ -51,7 +51,7 @@ RUN printf '%s\n' \
     'name = "meta-ads"' \
     'timeout_secs = 50' \
     '[mcp_servers.transport]' \
-    'type = "http"' \
+    'type = "sse"' \
     'url = "http://ia_meta-ads-mcp:8080/mcp"' \
     '' \
     '[[mcp_servers]]' \
