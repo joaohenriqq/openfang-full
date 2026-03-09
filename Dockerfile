@@ -51,8 +51,8 @@ RUN printf '%s\n' \
     'name = "meta-ads"' \
     'timeout_secs = 50' \
     '[mcp_servers.transport]' \
-    'type = "sse"' \
-    'url = "https://ads-mcp.imperiolabs.com.br/mcp"' \
+    'type = "http"' \
+    'url = "http://ia_meta-ads-mcp:8080/mcp"' \
     '' \
     '[[mcp_servers]]' \
     'name = "notion-mcp"' \
