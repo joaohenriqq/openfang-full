@@ -37,13 +37,12 @@ RUN printf '%s\n' \
     'set -eu' \
     'mkdir -p /data' \
     'cat > /data/config.toml <<EOF' \
-    '[api]' \
-    'listen_addr = "0.0.0.0:50051"' \
+    'api_listen = "0.0.0.0:50051"' \
     '' \
-    '[llm]' \
-    'provider = "${OPENFANG_LLM_PROVIDER:-gemini}"' \
-    'model = "${OPENFANG_LLM_MODEL:-gemini-3-flash-preview}"' \
-    'api_key_env = "${OPENFANG_LLM_API_KEY_ENV:-GEMINI_API_KEY}"' \
+    '[default_model]' \
+    'provider = "gemini"' \
+    'model = "gemini-2.5-flash"' \
+    'api_key_env = "GEMINI_API_KEY"' \
     'EOF' \
     'exec openfang start --config /data/config.toml' \
     > /usr/local/bin/start-openfang.sh && \
