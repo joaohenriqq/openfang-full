@@ -65,7 +65,7 @@ RUN printf '%s\n' \
     '[mcp_servers.transport]' \
     'type = "stdio"' \
     'command = "mcp-remote"' \
-    'args = ["https://ads-mcp.imperiolabs.com.br/mcp", "--transport", "http-only"]' \
+    'args = ["http://ia_meta-ads-mcp:8080/mcp", "--transport", "http-only"]' \
     '' \
     '[[mcp_servers]]' \
     'name = "notion-mcp"' \
