@@ -73,6 +73,7 @@ RUN printf '%s\n' \
     'EOF' \
     'cat > /data/config.toml <<EOF' \
     'api_listen = "0.0.0.0:50051"' \
+    'api_key = "${OPENFANG_API_KEY}"' \
     '' \
     '[default_model]' \
     'provider = "gemini"' \
