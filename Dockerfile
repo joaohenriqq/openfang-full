@@ -32,6 +32,23 @@ COPY --from=builder /build/target/release/openfang /usr/local/bin/openfang
 
 RUN ln -sf /usr/bin/chromium /usr/local/bin/chromium-browser || true
 
+RUN printf '%s\n' \
+    '#!/bin/sh' \
+    'set -eu' \
+    'mkdir -p /data' \
+    'cat > /data/config.toml <<EOF' \
+    '[api]' \
+    'listen_addr = "0.0.0.0:50051"' \
+    '' \
+    '[llm]' \
+    'provider = "${OPENFANG_LLM_PROVIDER:-gemini}"' \
+    'model = "${OPENFANG_LLM_MODEL:-gemini-3-flash-preview}"' \
+    'api_key_env = "${OPENFANG_LLM_API_KEY_ENV:-GEMINI_API_KEY}"' \
+    'EOF' \
+    'exec openfang start --config /data/config.toml' \
+    > /usr/local/bin/start-openfang.sh && \
+    chmod +x /usr/local/bin/start-openfang.sh
+
 ENV OPENFANG_HOME=/data
 WORKDIR /app
 
@@ -44,4 +61,6 @@ RUN mkdir -p /data /app && \
     cargo --version && \
     openfang --version
 
-CMD ["openfang", "start"]
+EXPOSE 50051
+
+CMD ["/usr/local/bin/start-openfang.sh"]
