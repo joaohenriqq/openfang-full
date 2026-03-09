@@ -1,6 +1,18 @@
-FROM ghcr.io/rightnow-ai/openfang:latest
+FROM rust:1.77-bookworm AS builder
 
-USER root
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    ca-certificates \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /build
+RUN git clone https://github.com/RightNow-AI/openfang.git .
+RUN cargo build --release -p openfang-cli
+
+
+FROM rust:1.77-bookworm
 
 RUN apt-get update && apt-get install -y \
     python3 \
@@ -11,17 +23,25 @@ RUN apt-get update && apt-get install -y \
     curl \
     ca-certificates \
     git \
-    build-essential \
+    sqlite3 \
     pkg-config \
     libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-ENV PATH="/root/.cargo/bin:${PATH}"
+COPY --from=builder /build/target/release/openfang /usr/local/bin/openfang
 
-RUN python3 --version && \
+RUN ln -sf /usr/bin/chromium /usr/local/bin/chromium-browser || true
+
+ENV OPENFANG_HOME=/data
+WORKDIR /app
+
+RUN mkdir -p /data /app && \
+    python3 --version && \
     node --version && \
     npm --version && \
     chromium --version && \
     rustc --version && \
-    cargo --version
+    cargo --version && \
+    openfang --version
+
+CMD ["openfang", "start"]
