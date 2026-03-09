@@ -78,6 +78,23 @@ RUN printf '%s\n' \
     'provider = "gemini"' \
     'model = "gemini-2.5-flash"' \
     'api_key_env = "GEMINI_API_KEY"' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "filesystem"' \
+    'timeout_secs = 30' \
+    '' \
+    '[mcp_servers.transport]' \
+    'type = "stdio"' \
+    'command = "npx"' \
+    'args = ["-y", "@modelcontextprotocol/server-filesystem", "/workspace"]' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "runware-mcp"' \
+    'timeout_secs = 60' \
+    '' \
+    '[mcp_servers.transport]' \
+    'type = "sse"' \
+    'url = "http://ia_mcp-runware:8081/sse"' \
     'EOF' \
     'exec openfang start --config /data/config.toml' \
     > /usr/local/bin/start-openfang.sh && \
