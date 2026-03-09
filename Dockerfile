@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y \
     nodejs \
     npm \
     chromium \
+    yt-dlp \
+    ffmpeg \
+    sudo \
     curl \
     ca-certificates \
     git \
@@ -35,7 +38,7 @@ RUN ln -sf /usr/bin/chromium /usr/local/bin/chromium-browser || true
 RUN printf '%s\n' \
     '#!/bin/sh' \
     'set -eu' \
-    'mkdir -p /data' \
+    'mkdir -p /data /workspace' \
     'cat > /data/config.toml <<EOF' \
     'api_listen = "0.0.0.0:50051"' \
     '' \
@@ -43,6 +46,42 @@ RUN printf '%s\n' \
     'provider = "gemini"' \
     'model = "gemini-2.5-flash"' \
     'api_key_env = "GEMINI_API_KEY"' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "meta-ads"' \
+    'timeout_secs = 50' \
+    '[mcp_servers.transport]' \
+    'type = "sse"' \
+    'url = "https://ads-mcp.imperiolabs.com.br/mcp"' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "notion-mcp"' \
+    'timeout_secs = 50' \
+    '[mcp_servers.transport]' \
+    'type = "sse"' \
+    'url = "https://mcp.notion.com/mcp"' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "kie-mcp"' \
+    'timeout_secs = 60' \
+    '[mcp_servers.transport]' \
+    'type = "sse"' \
+    'url = "http://ia_mcp-kie_ia_mcp-kie-ai:8081/mcp"' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "runware-mcp"' \
+    'timeout_secs = 60' \
+    '[mcp_servers.transport]' \
+    'type = "sse"' \
+    'url = "http://ia_mcp-runware:8081/sse"' \
+    '' \
+    '[[mcp_servers]]' \
+    'name = "filesystem"' \
+    'timeout_secs = 30' \
+    '[mcp_servers.transport]' \
+    'type = "stdio"' \
+    'command = "npx"' \
+    'args = ["-y", "@modelcontextprotocol/server-filesystem", "/workspace"]' \
     'EOF' \
     'exec openfang start --config /data/config.toml' \
     > /usr/local/bin/start-openfang.sh && \
@@ -51,11 +90,14 @@ RUN printf '%s\n' \
 ENV OPENFANG_HOME=/data
 WORKDIR /app
 
-RUN mkdir -p /data /app && \
+RUN mkdir -p /data /app /workspace && \
     python3 --version && \
     node --version && \
     npm --version && \
     chromium --version && \
+    yt-dlp --version && \
+    ffmpeg -version | head -n 1 && \
+    sudo --version | head -n 1 && \
     rustc --version && \
     cargo --version && \
     openfang --version
