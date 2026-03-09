@@ -73,28 +73,11 @@ RUN printf '%s\n' \
     'EOF' \
     'cat > /data/config.toml <<EOF' \
     'api_listen = "0.0.0.0:50051"' \
-    'api_key = "${OPENFANG_API_KEY}"' \
     '' \
     '[default_model]' \
     'provider = "gemini"' \
     'model = "gemini-2.5-flash"' \
     'api_key_env = "GEMINI_API_KEY"' \
-    '' \
-    '[[mcp_servers]]' \
-    'name = "meta-ads"' \
-    'url = "https://ads-mcp.imperiolabs.com.br/mcp"' \
-    '' \
-    '[[mcp_servers]]' \
-    'name = "notion-mcp"' \
-    'url = "https://mcp.notion.com/mcp"' \
-    '' \
-    '[[mcp_servers]]' \
-    'name = "kie-mcp"' \
-    'url = "http://ia_mcp-kie_ia_mcp-kie-ai:8081/mcp"' \
-    '' \
-    '[[mcp_servers]]' \
-    'name = "runware-mcp"' \
-    'url = "http://ia_mcp-runware:8081/sse"' \
     'EOF' \
     'exec openfang start --config /data/config.toml' \
     > /usr/local/bin/start-openfang.sh && \
