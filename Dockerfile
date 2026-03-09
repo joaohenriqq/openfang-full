@@ -84,7 +84,7 @@ RUN printf '%s\n' \
     '[mcp_servers.transport]' \
     'type = "stdio"' \
     'command = "mcp-remote"' \
-    'args = ["https://ia-mcp-n8n-1.y7xhql.easypanel.host/mcp", "--header", "Authorization:${N8N_MCP_AUTH_HEADER}", "--transport", "http-only"]' \
+    'args = ["http://ia_mcp-n8n-1_n8n-mcp:3000/mcp", "--header", "Authorization:${N8N_MCP_AUTH_HEADER}", "--transport", "http-only"]' \
     '' \
     '[[mcp_servers]]' \
     'name = "context7"' \
