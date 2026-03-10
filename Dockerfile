@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /build
 RUN git clone https://github.com/RightNow-AI/openfang.git .
-RUN cargo build --release -p openfang-cli@latest
+RUN cargo build --release -p openfang-cli
 
 
 FROM rust:1.77-bookworm
